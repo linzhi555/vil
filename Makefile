@@ -571,3 +571,9 @@ farsi: dist dist/$(COMMENT_FARSI)
 	zip -9 -rD -z dist/farsi$(VERSION).zip farsi < dist/$(COMMENT_FARSI)
 delete_other_os_file:
 	rm $(SRC_EXTRA)
+export_portable:
+	mkdir -p vil_release
+	cp  ./vil ./vil_release/vil
+	cp -r ./src/vim ./vil_release/vim
+	cp -r ./runtime ./vil_release/runtime
+	
