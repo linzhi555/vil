@@ -572,6 +572,7 @@ farsi: dist dist/$(COMMENT_FARSI)
 delete_other_os_file:
 	rm $(SRC_EXTRA)
 export_portable:
+	rm -r ./vil_release
 	mkdir -p vil_release
 	cp  ./vil ./vil_release/vil
 	cp -r ./src/vim ./vil_release/vim
