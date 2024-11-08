@@ -667,7 +667,6 @@ edit(
 		}
 	    }
 	}
-
 	// Prepare for or stop CTRL-X mode.  This doesn't do completion, but
 	// it does fix up the text when finishing completion.
 	ins_compl_init_get_longest();
@@ -768,6 +767,7 @@ edit(
 	    // FALLTHROUGH
 
 	case Ctrl_C:	// End input mode
+
 #ifdef FEAT_CMDWIN
 	    if (c == Ctrl_C && cmdwin_type != 0)
 	    {
@@ -2733,7 +2733,6 @@ cursor_up(
     int		upd_topline)	    // When TRUE: update topline
 {
     linenr_T	lnum;
-
     if (n > 0)
     {
 	lnum = curwin->w_cursor.lnum;

@@ -107,8 +107,11 @@ ex_help(exarg_T *eap)
 	    semsg(_("E661: Sorry, no '%s' help for %s"), lang, arg);
 	else
 #endif
-	    semsg(_("E149: Sorry, no help for %s"), arg);
+
+	    my_debug("no help tags");
+	    //semsg(_("E149: Sorry, no help for %s"), arg);
 	if (n != FAIL)
+
 	    FreeWild(num_matches, matches);
 	return;
     }

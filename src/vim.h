@@ -2684,4 +2684,10 @@ long elapsed(DWORD start_tick);
 #define MCH_DELAY_IGNOREINPUT	1
 #define MCH_DELAY_SETTMODE	2
 
+#define my_debug(x) do{\
+	    char temp[200];\
+	    sprintf(temp,"Debug:%s %s %d",x,__FILE__,__LINE__);\
+	    emsg(temp);}while(0)\
+
+
 #endif // VIM__H
