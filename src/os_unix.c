@@ -3412,9 +3412,6 @@ mch_exit(int r)
 	return;
 #endif
 
-#ifdef FEAT_NETBEANS_INTG
-    netbeans_send_disconnect();
-#endif
 
 #ifdef EXITFREE
     free_all_mem();

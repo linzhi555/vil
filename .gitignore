@@ -103,3 +103,4 @@ src/cscope.out
 backup/*
 tags
 vil_release/*
+.cache

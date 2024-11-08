@@ -1,9 +1,107 @@
-CC=
+CC=gcc
 
 srcdir = .
 VIMNAME = vim
 
-include auto/config.mk
+CC		= gcc
+DEFS		= -DHAVE_CONFIG_H
+CFLAGS		= -g -O2 -D_REENTRANT  -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
+CPPFLAGS	= 
+srcdir		= .
+
+LDFLAGS		=  -L/usr/local/lib -Wl,--as-needed
+LIBS		= -lm -ltinfo -lelf  -lselinux -lcanberra 
+TAGPRG		= ctags -t
+
+CPP		= gcc -E
+CPP_MM		= M
+DEPEND_CFLAGS_FILTER = | sed 's+-I */+-isystem /+g'
+LINK_AS_NEEDED	= yes
+X_CFLAGS	=  
+X_LIBS_DIR	=  
+X_PRE_LIBS	=  -lSM -lICE -lXpm
+X_EXTRA_LIBS	=  -lXdmcp -lSM -lICE -ldl
+X_LIBS		= -lXt -lX11
+
+NETBEANS_SRC	= netbeans.c
+NETBEANS_OBJ	= objects/netbeans.o
+CHANNEL_SRC	= job.c channel.c
+CHANNEL_OBJ	= objects/job.o objects/channel.o
+TERM_SRC	= libvterm/src/encoding.c libvterm/src/keyboard.c libvterm/src/mouse.c libvterm/src/parser.c libvterm/src/pen.c libvterm/src/creen.c libvterm/src/state.c libvterm/src/unicode.c libvterm/src/vterm.c
+TERM_OBJ	= objects/vterm_encoding.o objects/vterm_keyboard.o objects/vterm_mouse.o objects/vterm_parser.o objects/vterm_pen.o objects/vterm_screen.o objects/vterm_state.o objects/vterm_unicode.o objects/vterm_vterm.o
+TERM_TEST	= test_libvterm
+
+### sed command to fix quotes while creating pathdef.c
+QUOTESED        = sed -e 's/[\\"]/\\&/g' -e 's/\\"/"/' -e 's/\\";$$/";/'
+
+### Line break character as octal number for "tr"
+NL		= "\\012"
+
+### Top directory for everything
+prefix		= /usr/local
+
+### Top directory for the binary
+exec_prefix	= ${prefix}
+
+### Prefix for location of data files
+BINDIR		= ${exec_prefix}/bin
+
+### For autoconf 2.60 and later (avoid a warning)
+datarootdir	= ${prefix}/share
+
+### Prefix for location of data files
+DATADIR		= ${datarootdir}
+
+### Prefix for location of man pages
+MANDIR		= ${datarootdir}/man
+
+### Do we have a GUI
+GUI_INC_LOC	= 
+GUI_LIB_LOC	= 
+GUI_SRC		= $(ATHENA_SRC)
+GUI_OBJ		= $(ATHENA_OBJ)
+GUI_DEFS	= $(ATHENA_DEFS)
+GUI_IPATH	= $(ATHENA_IPATH)
+GUI_LIBS_DIR	= $(ATHENA_LIBS_DIR)
+GUI_LIBS1	= $(ATHENA_LIBS1)
+GUI_LIBS2	= $(ATHENA_LIBS2)
+GUI_INSTALL	= $(ATHENA_INSTALL)
+GUI_TARGETS	= $(ATHENA_TARGETS)
+GUI_MAN_TARGETS	= $(ATHENA_MAN_TARGETS)
+GUI_TESTTARGET	= $(ATHENA_TESTTARGET)
+GUI_TESTARG	= $(ATHENA_TESTARG)
+GUI_BUNDLE	= $(ATHENA_BUNDLE)
+NARROW_PROTO	= 
+GUI_X_LIBS	= -lXmu -lXext
+MOTIF_LIBNAME	= 
+GTK_LIBNAME	= 
+
+GLIB_COMPILE_RESOURCES = 
+GRESOURCE_SRC = 
+GRESOURCE_OBJ = 
+
+GTK_UPDATE_ICON_CACHE = 
+UPDATE_DESKTOP_DATABASE = 
+
+### Any OS dependent extra source and object file
+OS_EXTRA_SRC	= 
+OS_EXTRA_OBJ	= 
+
+### If the *.po files are to be translated to *.mo files.
+MAKEMO		= yes
+
+MSGFMT		= msgfmt
+MSGFMT_DESKTOP	= gvim.desktop vim.desktop
+
+### set if $SOURCE_DATE_EPOCH was set when running configure
+BUILD_DATE_MSG	= 
+
+
+# Make sure that "make first" will run "make all" once configure has done its
+# work.  This is needed when using the Makefile in the top directory.
+first: all
+
+
 CClink = $(CC)
 
 
@@ -48,6 +146,11 @@ TUTORSUBDIR = /tutor
 SPELLSUBDIR = /spell
 PRINTSUBDIR = /print
 PODIR = po
+
+LIBS=-lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 \
+	 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 \
+	 -lgobject-2.0 -lglib-2.0  -lSM -lICE -lXpm -lXt -lX11 \
+	 -lXdmcp -lSM -lICE  -lm -ltinfo  -lselinux -lcanberra
 
 ### Name of the defaults/evim/mswin file target.
 VIM_DEFAULTS_FILE = $(DESTDIR)$(SCRIPTLOC)/defaults.vim
@@ -144,25 +247,8 @@ XDIFF_INCL = \
 CPP_DEPEND = $(CC) -I$(srcdir) -M$(CPP_MM) \
 		`echo "$(DEPEND_CFLAGS)" $(DEPEND_CFLAGS_FILTER)`
 
-# flags for cproto
-#     This is for cproto 3 patchlevel 8 or below
-#     __inline, __attribute__ and __extension__ are not recognized by cproto
-#     G_IMPLEMENT_INLINES is to avoid functions defined in glib/gutils.h.
-#NO_ATTR = -D__inline= -D__inline__= -DG_IMPLEMENT_INLINES \
-#	  -D"__attribute__\\(x\\)=" -D"__asm__\\(x\\)=" \
-#	  -D__extension__= -D__restrict="" \
-#	  -D__gnuc_va_list=char -D__builtin_va_list=char
-
-#
-#     This is for cproto 3 patchlevel 9 or above (currently 4.6, 4.7g)
-#     __inline and __attribute__ are now recognized by cproto
-#     -D"foo()=" is not supported by all compilers so do not use it
 NO_ATTR=
 #
-# Use this for cproto 3 patchlevel 6 or below (use "cproto -V" to check):
-# PROTO_FLAGS = -f4 -d -E"$(CPP)" $(NO_ATTR)
-#
-# Use this for cproto 3 patchlevel 7 or above (use "cproto -V" to check):
 PROTO_FLAGS = -d -E"$(CPP)" $(NO_ATTR)
 
 
@@ -704,10 +790,8 @@ CCC = $(CCC_NF) $(ALL_CFLAGS)
 $(VIMTARGET): auto/config.mk objects $(OBJ) version.c version.h
 	$(CCC) version.c -o objects/version.o
 	@$(BUILD_DATE_MSG)
-	@LINK="$(PURIFY) $(SHRPENV) $(CClink) $(ALL_LIB_DIRS) $(LDFLAGS) \
-		-o $(VIMTARGET) $(OBJ) $(ALL_LIBS)" \
-		MAKE="$(MAKE)" LINK_AS_NEEDED=$(LINK_AS_NEEDED) \
-		sh $(srcdir)/link.sh
+	@$(PURIFY) $(SHRPENV) $(CClink) $(ALL_LIB_DIRS) $(LDFLAGS) \
+		-o $(VIMTARGET) $(OBJ) $(LIBS)
 
 xxd/xxd$(EXEEXT): xxd/xxd.c
 	cd xxd; CC="$(CC)" CFLAGS="$(CPPFLAGS) $(CFLAGS)" LDFLAGS="$(LDFLAGS)" \
@@ -815,8 +899,7 @@ $(HELPSOURCE)/vim.1 $(MACROSOURCE) $(TOOLSSOURCE):
 	test -f error
 
 # Clean up all the files that have been produced, except configure's.
-# We support common typing mistakes for Juergen! :-)
-clean celan: testclean
+clean : 
 	-rm -f *.o core $(VIMTARGET).core $(VIMTARGET) vim xxd/*.o
 	-rm -rf objects
 	-rm -f $(TOOLS) auto/osdef.h auto/pathdef.c auto/if_perl.c auto/gui_gtk_gresources.c auto/gui_gtk_gresources.h auto/os_haiku.rdef

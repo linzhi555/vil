@@ -252,10 +252,6 @@ insert_sign(
 
 	    // first sign in signlist
 	    buf->b_signlist = newsign;
-#ifdef FEAT_NETBEANS_INTG
-	    if (netbeans_active())
-		buf->b_has_sign_column = TRUE;
-#endif
 	}
 	else
 	    prev->se_next = newsign;
