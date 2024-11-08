@@ -772,9 +772,6 @@ buf_clear_file(buf_T *buf)
     buf->b_start_bomb = FALSE;
     buf->b_ml.ml_mfp = NULL;
     buf->b_ml.ml_flags = ML_EMPTY;		// empty buffer
-#ifdef FEAT_NETBEANS_INTG
-    netbeans_deleted_all_lines(buf);
-#endif
 }
 
 /*
@@ -1001,9 +998,6 @@ free_buffer_stuff(
     uc_clear(&buf->b_ucmds);		// clear local user commands
 #ifdef FEAT_SIGNS
     buf_delete_signs(buf, (char_u *)"*");	// delete any signs
-#endif
-#ifdef FEAT_NETBEANS_INTG
-    netbeans_file_killed(buf);
 #endif
     map_clear_int(buf, MAP_ALL_MODES, TRUE, FALSE);  // clear local mappings
     map_clear_int(buf, MAP_ALL_MODES, TRUE, TRUE);   // clear local abbrevs
@@ -1853,11 +1847,6 @@ enter_buffer(buf_T *buf)
 	// when autocmds didn't change it
     if (curwin->w_topline == 1 && !curwin->w_topline_was_set)
 	scroll_cursor_halfway(FALSE);	// redisplay at correct position
-
-#ifdef FEAT_NETBEANS_INTG
-    // Send fileOpened event because we've changed buffers.
-    netbeans_file_activated(curbuf);
-#endif
 
     // Change directories when the 'acd' option is set.
     DO_AUTOCHDIR;

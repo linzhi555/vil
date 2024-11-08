@@ -69,7 +69,6 @@ extern int _stricoll(char *a, char *b);
 # include "clipboard.pro"
 # include "cmdexpand.pro"
 # include "cmdhist.pro"
-# include "if_cscope.pro"
 # include "debugger.pro"
 # include "dict.pro"
 # include "diff.pro"
@@ -92,7 +91,6 @@ extern int _stricoll(char *a, char *b);
 # include "findfile.pro"
 # include "fold.pro"
 # include "getchar.pro"
-# include "gui_xim.pro"
 # include "hardcopy.pro"
 # include "hashtab.pro"
 # include "help.pro"
@@ -274,9 +272,10 @@ void mbyte_im_set_active(int active_arg);
 #  include "beval.pro"
 # endif
 
-# ifdef FEAT_NETBEANS_INTG
-#  include "netbeans.pro"
-# endif
+//# ifdef FEAT_NETBEANS_INTG
+//#  include "netbeans.pro"
+//# endif
+
 # ifdef FEAT_JOB_CHANNEL
 #  include "job.pro"
 #  include "channel.pro"

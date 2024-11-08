@@ -4013,9 +4013,7 @@ buf_check_timestamp(
 	    || !bt_normal(buf)
 	    || buf->b_saving
 	    || busy
-#ifdef FEAT_NETBEANS_INTG
-	    || isNetbeansBuffer(buf)
-#endif
+
 #ifdef FEAT_TERMINAL
 	    || buf->b_term != NULL
 #endif

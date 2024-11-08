@@ -1566,13 +1566,7 @@ set_one_cmd_context(
 	case CMD_highlight:
 	    set_context_in_highlight_cmd(xp, arg);
 	    break;
-#ifdef FEAT_CSCOPE
-	case CMD_cscope:
-	case CMD_lcscope:
-	case CMD_scscope:
-	    set_context_in_cscope_cmd(xp, arg, ea.cmdidx);
-	    break;
-#endif
+
 #ifdef FEAT_SIGNS
 	case CMD_sign:
 	    set_context_in_sign_cmd(xp, arg);
@@ -2132,9 +2126,7 @@ ExpandFromContext(
 	    {EXPAND_HIGHLIGHT, get_highlight_name, TRUE, TRUE},
 	    {EXPAND_EVENTS, get_event_name, TRUE, TRUE},
 	    {EXPAND_AUGROUP, get_augroup_name, TRUE, TRUE},
-# ifdef FEAT_CSCOPE
-	    {EXPAND_CSCOPE, get_cscope_name, TRUE, TRUE},
-# endif
+
 # ifdef FEAT_SIGNS
 	    {EXPAND_SIGN, get_sign_name, TRUE, TRUE},
 # endif
@@ -2921,13 +2913,7 @@ f_getcompletion(typval_T *argvars, typval_T *rettv)
 	    xpc.xp_pattern_len = (int)STRLEN(xpc.xp_pattern);
 	}
 # endif
-# ifdef FEAT_CSCOPE
-	if (xpc.xp_context == EXPAND_CSCOPE)
-	{
-	    set_context_in_cscope_cmd(&xpc, xpc.xp_pattern, CMD_cscope);
-	    xpc.xp_pattern_len = (int)STRLEN(xpc.xp_pattern);
-	}
-# endif
+
 # ifdef FEAT_SIGNS
 	if (xpc.xp_context == EXPAND_SIGN)
 	{

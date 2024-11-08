@@ -4921,9 +4921,7 @@ iconv_end(void)
     void
 f_getimstatus(typval_T *argvars UNUSED, typval_T *rettv)
 {
-# if defined(HAVE_INPUT_METHOD)
-    rettv->vval.v_number = im_get_status();
-# endif
+
 }
 #endif
 

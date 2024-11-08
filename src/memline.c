@@ -3208,15 +3208,7 @@ ml_append_int(
     // The line was inserted below 'lnum'
     ml_updatechunk(buf, lnum + 1, (long)len, ML_CHNK_ADDLINE);
 #endif
-#ifdef FEAT_NETBEANS_INTG
-    if (netbeans_active())
-    {
-	if (STRLEN(line) > 0)
-	    netbeans_inserted(buf, lnum+1, (colnr_T)0, line, (int)STRLEN(line));
-	netbeans_inserted(buf, lnum+1, (colnr_T)STRLEN(line),
-							   (char_u *)"\n", 1);
-    }
-#endif
+
 #ifdef FEAT_JOB_CHANNEL
     if (buf->b_write_to_channel)
 	channel_write_new_lines(buf);
@@ -3376,13 +3368,6 @@ ml_replace_len(
 	    return FAIL;
     }
 
-#ifdef FEAT_NETBEANS_INTG
-    if (netbeans_active())
-    {
-	netbeans_removed(curbuf, lnum, 0, (long)STRLEN(ml_get(lnum)));
-	netbeans_inserted(curbuf, lnum, 0, line, (int)STRLEN(line));
-    }
-#endif
     if (curbuf->b_ml.ml_line_lnum != lnum)
     {
 	// another line is buffered, flush it
@@ -3606,10 +3591,6 @@ ml_delete_int(buf_T *buf, linenr_T lnum, int flags)
     else
 	line_size = ((dp->db_index[idx - 1]) & DB_INDEX_MASK) - line_start;
 
-#ifdef FEAT_NETBEANS_INTG
-    if (netbeans_active())
-	netbeans_removed(buf, lnum, 0, (long)line_size);
-#endif
 #ifdef FEAT_PROP_POPUP
     // If there are text properties, make a copy, so that we can update
     // properties in preceding and following lines.

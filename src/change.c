@@ -860,9 +860,6 @@ unchanged(buf_T *buf, int ff, int always_inc_changedtick)
     }
     else if (always_inc_changedtick)
 	++CHANGEDTICK(buf);
-#ifdef FEAT_NETBEANS_INTG
-    netbeans_unmodified(buf);
-#endif
 }
 
 /*
@@ -1264,16 +1261,6 @@ del_bytes(
     }
     newlen = oldlen - count;
 
-    // If the old line has been allocated the deletion can be done in the
-    // existing line. Otherwise a new line has to be allocated
-    // Can't do this when using Netbeans, because we would need to invoke
-    // netbeans_removed(), which deallocates the line.  Let ml_replace() take
-    // care of notifying Netbeans.
-#ifdef FEAT_NETBEANS_INTG
-    if (netbeans_active())
-	alloc_newp = TRUE;
-    else
-#endif
 	alloc_newp = !ml_line_alloced();    // check if oldp was allocated
     if (!alloc_newp)
 	newp = oldp;			    // use same allocated memory

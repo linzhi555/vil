@@ -398,12 +398,8 @@ clip_invert_rectangle(
     if (height > cbd->max_row - row + 1)
 	height = cbd->max_row - row + 1;
 #endif
-#ifdef FEAT_GUI
-    if (gui.in_use)
-	gui_mch_invert_rectangle(row, col, height, width);
-    else
-#endif
-	screen_draw_rectangle(row, col, height, width, invert);
+
+    screen_draw_rectangle(row, col, height, width, invert);
 #ifdef FEAT_PROP_POPUP
     screen_zindex = 0;
 #endif

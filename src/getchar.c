@@ -2183,10 +2183,7 @@ parse_queued_messages(void)
 	channel_handle_events(FALSE);
 # endif
 
-# ifdef FEAT_NETBEANS_INTG
-	// Process the queued netbeans messages.
-	netbeans_parse_messages();
-# endif
+
 # ifdef FEAT_JOB_CHANNEL
 	// Write any buffer lines still to be written.
 	channel_write_any_lines();
@@ -3333,11 +3330,7 @@ vgetorpeek(int advance)
 						     + typebuf.tb_len] != NUL)
 			typebuf.tb_noremap[typebuf.tb_off
 						 + typebuf.tb_len++] = RM_YES;
-#ifdef HAVE_INPUT_METHOD
-		    // Get IM status right after getting keys, not after the
-		    // timeout for a mapping (focus may be lost by then).
-		    vgetc_im_active = im_get_status();
-#endif
+
 		}
 	    }	    // for (;;)
 	}	// if (!character from stuffbuf)

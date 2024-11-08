@@ -99,24 +99,7 @@
 # define UNIX
 #endif
 
-#if defined(FEAT_GUI_MOTIF) \
-    || defined(FEAT_GUI_GTK) \
-    || defined(FEAT_GUI_ATHENA) \
-    || defined(FEAT_GUI_HAIKU) \
-    || defined(FEAT_GUI_MSWIN) \
-    || defined(FEAT_GUI_PHOTON)
-# define FEAT_GUI_ENABLED  // also defined with NO_X11_INCLUDES
-# if !defined(FEAT_GUI) && !defined(NO_X11_INCLUDES)
-#  define FEAT_GUI
-# endif
-#endif
 
-// Check support for rendering options
-#ifdef FEAT_GUI
-# if defined(FEAT_DIRECTX)
-#  define FEAT_RENDER_OPTIONS
-# endif
-#endif
 
 /*
  * VIM_SIZEOF_INT is used in feature.h, and the system-specific included files

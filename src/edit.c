@@ -293,9 +293,6 @@ edit(
      */
     if (curbuf->b_p_iminsert == B_IMODE_LMAP)
 	State |= LANGMAP;
-#ifdef HAVE_INPUT_METHOD
-    im_set_active(curbuf->b_p_iminsert == B_IMODE_IM);
-#endif
 
     setmouse();
 #ifdef FEAT_CMDL_INFO
@@ -872,14 +869,6 @@ doESCkey:
 		need_start_insertmode = TRUE;
 	    goto doESCkey;
 
-#ifdef FEAT_NETBEANS_INTG
-	case K_F21:	// NetBeans command
-	    ++no_mapping;		// don't map the next key hits
-	    i = plain_vgetc();
-	    --no_mapping;
-	    netbeans_keycommand(i);
-	    break;
-#endif
 
 	case K_ZERO:	// Insert the previously inserted text.
 	case NUL:
@@ -3378,9 +3367,7 @@ ins_reg(void)
     if (regname == '=')
     {
 	pos_T	curpos = curwin->w_cursor;
-# ifdef HAVE_INPUT_METHOD
-	int	im_on = im_get_status();
-# endif
+
 	// Sync undo when evaluating the expression calls setline() or
 	// append(), so that it can be undone separately.
 	u_sync_once = 2;
@@ -3390,11 +3377,7 @@ ins_reg(void)
 	// Cursor may be moved back a column.
 	curwin->w_cursor = curpos;
 	check_cursor();
-# ifdef HAVE_INPUT_METHOD
-	// Restore the Input Method.
-	if (im_on)
-	    im_set_active(TRUE);
-# endif
+
     }
     if (regname == NUL || !valid_yank_reg(regname, FALSE))
     {
@@ -3519,28 +3502,9 @@ ins_ctrl_hat(void)
 	{
 	    curbuf->b_p_iminsert = B_IMODE_LMAP;
 	    State |= LANGMAP;
-#ifdef HAVE_INPUT_METHOD
-	    im_set_active(FALSE);
-#endif
+
 	}
     }
-#ifdef HAVE_INPUT_METHOD
-    else
-    {
-	// There are no ":lmap" mappings, toggle IM
-	if (im_get_status())
-	{
-	    curbuf->b_p_iminsert = B_IMODE_NONE;
-	    im_set_active(FALSE);
-	}
-	else
-	{
-	    curbuf->b_p_iminsert = B_IMODE_IM;
-	    State &= ~LANGMAP;
-	    im_set_active(TRUE);
-	}
-    }
-#endif
     set_iminsert_global();
     showmode();
 #ifdef FEAT_GUI
@@ -3657,14 +3621,7 @@ ins_esc(
 	}
     }
 
-#ifdef HAVE_INPUT_METHOD
-    // Disable IM to allow typing English directly for Normal mode commands.
-    // When ":lmap" is enabled don't change 'iminsert' (IM can be enabled as
-    // well).
-    if (!(State & LANGMAP))
-	im_save_status(&curbuf->b_p_iminsert);
-    im_set_active(FALSE);
-#endif
+
 
     State = NORMAL;
     // need to position cursor again (e.g. when on a TAB )
@@ -5033,14 +4990,6 @@ ins_tab(void)
 		    for (temp = i; --temp >= 0; )
 			replace_join(repl_off);
 	    }
-#ifdef FEAT_NETBEANS_INTG
-	    if (netbeans_active())
-	    {
-		netbeans_removed(curbuf, fpos.lnum, cursor->col, (long)(i + 1));
-		netbeans_inserted(curbuf, fpos.lnum, cursor->col,
-							   (char_u *)"\t", 1);
-	    }
-#endif
 	    cursor->col -= i;
 
 	    /*

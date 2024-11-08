@@ -1024,13 +1024,6 @@
 # define FIND_REPLACE_DIALOG 1
 #endif
 
-/*
- * +clientserver	Remote control via the remote_send() function
- *			and the --remote argument
- */
-#if (defined(MSWIN) || defined(FEAT_XCLIPBOARD)) && defined(FEAT_EVAL)
-# define FEAT_CLIENTSERVER
-#endif
 
 /*
  * +autoservername	Automatically generate a servername for clientserver

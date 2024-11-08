@@ -8437,13 +8437,7 @@ ex_tag_cmd(exarg_T *eap, char_u *name)
 	case 'l': cmd = DT_LAST;	// ":tlast"
 		  break;
 	default:			// ":tag"
-#ifdef FEAT_CSCOPE
-		  if (p_cst && *eap->arg != NUL)
-		  {
-		      ex_cstag(eap);
-		      return;
-		  }
-#endif
+
 		  cmd = DT_TAG;
 		  break;
     }

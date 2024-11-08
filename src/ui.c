@@ -398,9 +398,6 @@ inchar_loop(
 #endif
 
 	if ((resize_func != NULL && resize_func(TRUE))
-#if defined(FEAT_CLIENTSERVER) && defined(UNIX)
-		|| server_waiting()
-#endif
 #ifdef MESSAGE_QUEUE
 		|| interrupted
 #endif

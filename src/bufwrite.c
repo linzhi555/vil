@@ -974,37 +974,6 @@ buf_write(
 	buf->b_op_end = orig_end;
     }
 
-#ifdef FEAT_NETBEANS_INTG
-    if (netbeans_active() && isNetbeansBuffer(buf))
-    {
-	if (whole)
-	{
-	    // b_changed can be 0 after an undo, but we still need to write
-	    // the buffer to NetBeans.
-	    if (buf->b_changed || isNetbeansModified(buf))
-	    {
-		--no_wait_return;		// may wait for return now
-		msg_scroll = msg_save;
-		netbeans_save_buffer(buf);	// no error checking...
-		return retval;
-	    }
-	    else
-	    {
-		errnum = (char_u *)"E656: ";
-		errmsg = (char_u *)_("NetBeans disallows writes of unmodified buffers");
-		buffer = NULL;
-		goto fail;
-	    }
-	}
-	else
-	{
-	    errnum = (char_u *)"E657: ";
-	    errmsg = (char_u *)_("Partial writes disallowed for NetBeans buffers");
-	    buffer = NULL;
-	    goto fail;
-	}
-    }
-#endif
 
     if (shortmess(SHM_OVER) && !exiting)
 	msg_scroll = FALSE;	    // overwrite previous file message

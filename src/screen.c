@@ -4135,20 +4135,7 @@ showmode(void)
 	if (do_mode)
 	{
 	    msg_puts_attr("--", attr);
-#if defined(FEAT_XIM)
-	    if (
-# ifdef FEAT_GUI_GTK
-		    preedit_get_status()
-# else
-		    im_get_status()
-# endif
-	       )
-# ifdef FEAT_GUI_GTK // most of the time, it's not XIM being used
-		msg_puts_attr(" IM", attr);
-# else
-		msg_puts_attr(" XIM", attr);
-# endif
-#endif
+
 	    // CTRL-X in Insert mode
 	    if (edit_submode != NULL && !shortmess(SHM_COMPLETIONMENU))
 	    {

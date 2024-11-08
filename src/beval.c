@@ -315,10 +315,7 @@ general_beval_cb(BalloonEval *beval, int state UNUSED)
 	}
     }
 #endif
-#ifdef FEAT_NETBEANS_INTG
-    if (bevalServers & BEVAL_NETBEANS)
-	netbeans_beval_cb(beval, state);
-#endif
+
 
     recursive = FALSE;
 }

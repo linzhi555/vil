@@ -121,9 +121,7 @@ static void	nv_join(cmdarg_T *cap);
 static void	nv_put(cmdarg_T *cap);
 static void	nv_put_opt(cmdarg_T *cap, int fix_indent);
 static void	nv_open(cmdarg_T *cap);
-#ifdef FEAT_NETBEANS_INTG
-static void	nv_nbcmd(cmdarg_T *cap);
-#endif
+
 #ifdef FEAT_DND
 static void	nv_drop(cmdarg_T *cap);
 #endif
@@ -367,9 +365,7 @@ static const struct nv_cmd
     {K_TABLINE, nv_tabline,	0,			0},
     {K_TABMENU, nv_tabmenu,	0,			0},
 #endif
-#ifdef FEAT_NETBEANS_INTG
-    {K_F21,	nv_nbcmd,	NV_NCH_ALW,		0},
-#endif
+
 #ifdef FEAT_DND
     {K_DROP,	nv_drop,	NV_STS,			0},
 #endif
@@ -890,12 +886,7 @@ getcount:
 		    State = LANGMAP;
 		langmap_active = TRUE;
 	    }
-#ifdef HAVE_INPUT_METHOD
-	    save_smd = p_smd;
-	    p_smd = FALSE;	// Don't let the IM code show the mode here
-	    if (lang && curbuf->b_p_iminsert == B_IMODE_IM)
-		im_set_active(TRUE);
-#endif
+
 	    if ((State & INSERT) && !p_ek)
 	    {
 #ifdef FEAT_JOB_CHANNEL
@@ -926,15 +917,7 @@ getcount:
 		++allow_keys;
 		State = NORMAL_BUSY;
 	    }
-#ifdef HAVE_INPUT_METHOD
-	    if (lang)
-	    {
-		if (curbuf->b_p_iminsert != B_IMODE_LMAP)
-		    im_save_status(&curbuf->b_p_iminsert);
-		im_set_active(FALSE);
-	    }
-	    p_smd = save_smd;
-#endif
+
 	    State = NORMAL_BUSY;
 #ifdef FEAT_CMDL_INFO
 	    need_flushbuf |= add_to_showcmd(*cp);
@@ -5086,17 +5069,6 @@ nv_replace(cmdarg_T *cap)
 		    showmatch(cap->nchar);
 		++curwin->w_cursor.col;
 	    }
-#ifdef FEAT_NETBEANS_INTG
-	    if (netbeans_active())
-	    {
-		colnr_T  start = (colnr_T)(curwin->w_cursor.col - cap->count1);
-
-		netbeans_removed(curbuf, curwin->w_cursor.lnum, start,
-							   (long)cap->count1);
-		netbeans_inserted(curbuf, curwin->w_cursor.lnum, start,
-					       &ptr[start], (int)cap->count1);
-	    }
-#endif
 
 	    // mark the buffer as changed and prepare for displaying
 	    changed_bytes(curwin->w_cursor.lnum,
@@ -5260,22 +5232,6 @@ n_swapchar(cmdarg_T *cap)
 	    if (vim_strchr(p_ww, '~') != NULL
 		    && curwin->w_cursor.lnum < curbuf->b_ml.ml_line_count)
 	    {
-#ifdef FEAT_NETBEANS_INTG
-		if (netbeans_active())
-		{
-		    if (did_change)
-		    {
-			ptr = ml_get(pos.lnum);
-			count = (int)STRLEN(ptr) - pos.col;
-			netbeans_removed(curbuf, pos.lnum, pos.col,
-								 (long)count);
-			netbeans_inserted(curbuf, pos.lnum, pos.col,
-							&ptr[pos.col], count);
-		    }
-		    pos.col = 0;
-		    pos.lnum++;
-		}
-#endif
 		++curwin->w_cursor.lnum;
 		curwin->w_cursor.col = 0;
 		if (n > 1)
@@ -5289,16 +5245,6 @@ n_swapchar(cmdarg_T *cap)
 		break;
 	}
     }
-#ifdef FEAT_NETBEANS_INTG
-    if (did_change && netbeans_active())
-    {
-	ptr = ml_get(pos.lnum);
-	count = curwin->w_cursor.col - pos.col;
-	netbeans_removed(curbuf, pos.lnum, pos.col, (long)count);
-	netbeans_inserted(curbuf, pos.lnum, pos.col, &ptr[pos.col], count);
-    }
-#endif
-
 
     check_cursor();
     curwin->w_set_curswant = TRUE;
@@ -7523,13 +7469,6 @@ nv_open(cmdarg_T *cap)
 	n_opencmd(cap);
 }
 
-#ifdef FEAT_NETBEANS_INTG
-    static void
-nv_nbcmd(cmdarg_T *cap)
-{
-    netbeans_keycommand(cap->nchar);
-}
-#endif
 
 #ifdef FEAT_DND
     static void

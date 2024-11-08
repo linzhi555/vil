@@ -835,24 +835,6 @@ vim_main2(void)
     if (restart_edit != 0)
 	stuffcharReadbuff(K_NOP);
 
-#ifdef FEAT_NETBEANS_INTG
-    if (netbeansArg != NULL && strncmp("-nb", netbeansArg, 3) == 0)
-    {
-# ifdef FEAT_GUI
-#  if !defined(FEAT_GUI_X11) && !defined(FEAT_GUI_GTK)  \
-		&& !defined(FEAT_GUI_MSWIN)
-	if (gui.in_use)
-	{
-	    mch_errmsg(_("netbeans is not supported with this GUI\n"));
-	    mch_exit(2);
-	}
-#  endif
-# endif
-	// Tell the client that it can start sending commands.
-	netbeans_open(netbeansArg + 3, TRUE);
-    }
-#endif
-
     // Redraw at least once, also when 'lazyredraw' is set, to make sure the
     // window title gets updated.
     do_redraw = TRUE;
@@ -1672,12 +1654,7 @@ getout(int exitval)
 #if defined(USE_ICONV) && defined(DYNAMIC_ICONV)
     iconv_end();
 #endif
-#ifdef FEAT_NETBEANS_INTG
-    netbeans_end();
-#endif
-#ifdef FEAT_CSCOPE
-    cs_end();
-#endif
+
 #ifdef FEAT_EVAL
     if (garbage_collect_at_exit)
 	garbage_collect(FALSE);

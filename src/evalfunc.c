@@ -815,8 +815,7 @@ static funcentry_T global_functions[] =
 			ret_float,	    FLOAT_FUNC(f_cosh)},
     {"count",		2, 4, FEARG_1,	    NULL,
 			ret_number,	    f_count},
-    {"cscope_connection",0,3, 0,	    NULL,
-			ret_number,	    f_cscope_connection},
+
     {"cursor",		1, 3, FEARG_1,	    NULL,
 			ret_number,	    f_cursor},
     {"debugbreak",	1, 1, FEARG_1,	    NULL,
@@ -5461,9 +5460,7 @@ f_has(typval_T *argvars, typval_T *rettv)
 	else if (STRICMP(name, "netbeans_enabled") == 0)
 	{
 	    x = TRUE;
-#ifdef FEAT_NETBEANS_INTG
-	    n = netbeans_active();
-#endif
+
 	}
 	else if (STRICMP(name, "mouse_gpm_enabled") == 0)
 	{

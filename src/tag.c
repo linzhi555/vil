@@ -363,9 +363,6 @@ do_tag(
 
 		// remove the old list of matches
 		FreeWild(num_matches, matches);
-#ifdef FEAT_CSCOPE
-		cs_free_tags();
-#endif
 		num_matches = 0;
 		tag_freematch();
 		goto end_do_tag;
@@ -609,14 +606,6 @@ do_tag(
 	{
 	    int ask_for_selection = FALSE;
 
-#ifdef FEAT_CSCOPE
-	    if (type == DT_CSCOPE && num_matches > 1)
-	    {
-		cs_print_tags();
-		ask_for_selection = TRUE;
-	    }
-	    else
-#endif
 	    if (type == DT_TAG && *tag != NUL)
 		// If a count is supplied to the ":tag <name>" command, then
 		// jump to count'th matching tag.
@@ -649,10 +638,7 @@ do_tag(
 			tagstack[tagstackidx].fmark = saved_fmark;
 			tagstackidx = prevtagstackidx;
 		    }
-#ifdef FEAT_CSCOPE
-		    cs_free_tags();
-		    jumped_to_tag = TRUE;
-#endif
+
 		    break;
 		}
 		cur_match = i - 1;
@@ -1994,11 +1980,7 @@ find_tags(
 		// skip empty and blank lines
 		do
 		{
-#ifdef FEAT_CSCOPE
-		    if (use_cscope)
-			eof = cs_fgets(lbuf, lbuf_size);
-		    else
-#endif
+
 			eof = vim_fgets(lbuf, lbuf_size, fp);
 		} while (!eof && vim_isblankline(lbuf));
 
